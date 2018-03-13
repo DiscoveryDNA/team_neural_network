@@ -18,6 +18,7 @@ Each project is unique and thus requires unique project management, therefore th
 
 **Example Project Structure**
 
+```
 project_title/
 	├── notes/
 	|   ├── binding_site_notes.md
@@ -33,6 +34,7 @@ project_title/
 	|     ├── thresholds_bcd_17Feb2018.py
 	|     └── thresholds_kru_17Feb2018.py
 	└── README.md
+```
 
 ## Code
 

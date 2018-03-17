@@ -35,9 +35,4 @@ Implementation: TensorFlow, Keras
 
 ## Data Management
 
-1. All output data is kept in `data/output` and tagged with date of creation. 
-2. Notes on background are kept in team repo in the wiki
-3. Scripts that are run sequentially are numbered accordingly
-5. Use underscores for spaces in file and folder naming
-6. Keep data over 100MB in [Google Drive DiscoveryDNA_shared_data](https://drive.google.com/open?id=1kAh9NPg0gin4KIYvdz2Czi1LCQ2Js06X)
-7. Update README with vital information about repo or directory
+- See [`data_management.md`](https://github.com/DiscoveryDNA/team_neural_network/blob/master/data_managment.md)

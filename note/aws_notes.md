@@ -19,6 +19,15 @@ From now on, we are going to be using [Spot Instances](https://aws.amazon.com/ec
   - key: versleuteling2
 2.  Wait till the instance becomes active. From 1 min to 10 min usually
 3.  When instance ready, you can go to "Instances" section, Name your instance, Slack Ciera that you have started using an instance.
+4.  Copy the instance's public dns.
+5.  `cd` to the your key directory.
+6.  Use this command to access the instance: `ssh -L localhost:8888:localhost:8888 -i <your .pem filename> ubuntu@<your instance DNS>`. (**Note: This command is not the same as the one mentioned on the ec2 instance connecting page. For Jupyter Notebook to configure correctly, you need to use this command.**)
+6.  The Amazon Deep Learning AMI uses Anaconda virtual environments to host and manage many different deep learning frameworks at the same time. Hence, you need to choose which deep learning framework you want to use at the beginning of each session:
+  - For *TensorFlow(+Keras2) with Python3 (CUDA 9.0 and Intel MKL-DNN)*, use the command (type it anywhere in the terminal): `source activate tensorflow_p36`.
+  - For any other framework, follow the instruction detailed in the terminal window at the beginning of each session.
+6.  To access the Jupyter Notebook, use the command: `jupyter notebook`.
+7.  Look for the sentence 'Copy/paste this URL into your browser when you connect for the first time, to login with a token:' in the terminal window. Copy the URL after this sentence **verbatim** into the browser (i.e. do not change `localhost` to anything else).
+8.  By this point, you should be able to access the jupyter notebook in the browser.
 4.  Use as normal.
 5.  When finished, if you installed new software, make a new AMI and name accordingly. 
 6.  Terminate instance when done and Slack Ciera. 

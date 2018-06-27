@@ -13,7 +13,7 @@ From now on, we are going to be using [Spot Instances](https://aws.amazon.com/ec
 ## Workflow
 
 1. Click "Spot Request" in the left hand menu and click the blue "Request Spot Instances". Everything is the default setting with the exception of:
-  - AMI: group_image_22june2018 - ami-89b157ea
+  - AMI: group_image_27june2018_2 - ami-0fac4d6c
   - Instance type(s): close C3 and choose either the g2.8xlarge (for full analysis) or g2xlarge (for learning and set-up) instance type
   - Security Group: Bitfusion Ubuntu 14 TensorFlow-2017-04-AutogenByAWSMP-2
   - key: versleuteling2

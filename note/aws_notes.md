@@ -58,7 +58,7 @@ After setting up the EC2 image on AWS, you need to attach volume so you have dis
 **Steps for detaching volume**
 
 1. take snapshot of your volume
-2. unmount: `umount -d /dev/sdh`
+2. unmount: `sudo umount -d /dev/xvdf`
 3. detach volume
 4. delete volume
 

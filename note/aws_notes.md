@@ -34,6 +34,11 @@ From now on, we are going to be using [Spot Instances](https://aws.amazon.com/ec
 
 **Useful Commands**
 
+ - Use the `screen` program to monitor the GPU usage while the jupyter notebook is running:
+  - The `screen` program let you open multiple windows that work seperately at the same time on the Ubuntu virtual machine.
+  - Type `screen` and press `enter` to initiate the `screen` program.
+  - Type `control-A` then `C` to open a new window where you can run the GPU monitor.
+  - To switch between the window of jupyter notebook and the GPU monitor, use either `control-A` then `P` (move to the previous window) or `control-A` then `N` (move to the next window).
  - `nvidia-smi -l 1` - monitor and view GPU usage every second
  - `lspci | grep -i nvidia` - ask which NVIDIA controller you are using
  - To check if tensorflow is working (in jupyter notebook):
@@ -43,6 +48,13 @@ hello = tf.constant('Hello, TensorFlow!')
 sess = tf.Session()
 print(sess.run(hello))
 ```
+
+## Useful tips for Using Keras with GPU
+
+- For some neural networks, there are layers specifically designed for GPU acceleration. For example, for LSTM layer, there are two different options in Keras: `LSTM` and `CuDNNLSTM`. `LSTM` should only be used with CPU, using it with GPU would be > 2 times slower than CPU. Instead, you should use `CuDNNLSTM` with GPU. `CuDNNLSTM` achieves the same result as `LSTM` but is tailored for GPU. Using it can easily achieve a > 10 times speed boost when comparing with using CPU.
+- For rnn networks, you should always use the ‘CuDNN’ version of layers in order for GPU acceleration to work properly.
+- At current stage, the GPU shouldn’t take more than 1 minute to run 1 epoch for our data. If it takes much longer than that (e.g. > 2 minutes), it is a sign that GPU is not fully utilized.
+
 
 ## Volumes
 

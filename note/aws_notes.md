@@ -32,13 +32,13 @@ From now on, we are going to be using [Spot Instances](https://aws.amazon.com/ec
 12.  When finished, if you installed new software, make a new AMI and name accordingly. 
 13.  Terminate instance when done and Slack Ciera. 
 
-**Useful Commands**
+## Useful Commands
 
  - Use the `screen` program to monitor the GPU usage while the jupyter notebook is running:
-  - The `screen` program let you open multiple windows that work seperately at the same time on the Ubuntu virtual machine.
-  - Type `screen` and press `enter` to initiate the `screen` program.
-  - Type `control-A` then `C` to open a new window where you can run the GPU monitor.
-  - To switch between the window of jupyter notebook and the GPU monitor, use either `control-A` then `P` (move to the previous window) or `control-A` then `N` (move to the next window).
+    1. The `screen` program let you open multiple windows that work seperately at the same time on the Ubuntu virtual machine.
+    2. Type `screen` and press `enter` to initiate the `screen` program.
+    3. Type `control-A` then `C` to open a new window where you can run the GPU monitor.
+    4. To switch between the window of jupyter notebook and the GPU monitor, use either `control-A` then `P` (move to the previous window) or `control-A` then `N` (move to the next window).
  - `nvidia-smi -l 1` - monitor and view GPU usage every second
  - `lspci | grep -i nvidia` - ask which NVIDIA controller you are using
  - To check if tensorflow is working (in jupyter notebook):

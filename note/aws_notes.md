@@ -32,6 +32,8 @@ From now on, we are going to be using [Spot Instances](https://aws.amazon.com/ec
 12.  When finished, if you installed new software, make a new AMI and name accordingly. 
 13.  Terminate instance when done and Slack Ciera. 
 
+## Workflow for doing neural network training:
+
 ## Useful Commands
 
  - Use the `screen` program to monitor the GPU usage while the jupyter notebook is running:
@@ -73,6 +75,7 @@ After setting up the EC2 image on AWS, you need to attach volume so you have dis
 - `sudo file -s /dev/xvdf` ask if your volume is formatted. If output is data then it is *not* formatted.
 - `df` - ask how much space
 - `df -Th` 
+- To copy files from your computer to the volume, use the following command: `sudo scp -r -i <your security key .pem file> <data folder address on your computer> ubuntu@instance_public_ip:folder_address_to_store_data_on_the_instance`.
 
 \* There are ways to assign a volume to an instance and automatically attach at every bootup. But currently not using these, but def useful in future.
 

@@ -15,6 +15,7 @@ From now on, we are going to be using [Spot Instances](https://aws.amazon.com/ec
 1. Click "Spot Request" in the left hand menu and click the blue "Request Spot Instances". Everything is the default setting with the exception of:
   - AMI: deep_learning_AWS_ubuntuV9_28June2018
   - Instance type(s): close C3 and choose p2.xlarge
+  - Availability Zone:  us-west-2a (so you can use the group_volume)
   - Security Group: deep_learning_security
   - key: oregon_group_key.pem
 2.  Wait till the instance becomes active. From 1 min to 3 min usually

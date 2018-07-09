@@ -68,7 +68,8 @@ After setting up the EC2 image on AWS, you need to attach volume so you have dis
 1. Start old snapshot as a new volume
 1. Attach volume to instance in gui
 2. **ONLY FIRST TIME USING IT**: Create file system on your volume: `sudo mkfs -t ext4 device_name`.  I ran into a bug in which this doesn't work, but this does: `mkfs -t ext4 -L rootfs device_name`
-3. `sudo mount device_name mount_point` (example `sudo mount /dev/xvdf data`
+3. `sudo mount device_name mount_point` (example `sudo mount /dev/xvdf data`) 
+  - use `lsblk` to see device name
 4. change permission for directory: `sudo chmod 777 -R mount_point`
 
 **Useful commands**

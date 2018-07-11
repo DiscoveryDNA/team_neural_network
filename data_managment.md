@@ -57,7 +57,7 @@ We are doing scientific experiments therefore we need to be keeping track of our
 		-  What conclusions can you make from these results? 
 		-  Did you find something that works and we should keep using? 
 		-  Did you find out that does not work and we should stop using
-		-  **What are the next experiments to try next?**
+		-  **What are the next experiments to try?**
 
 ## Code
 

@@ -36,6 +36,29 @@ project_title/
 	└── README.md
 ```
 
+## Scientific Notebooks and organization of our code directory
+
+We are doing scientific experiments therefore we need to be keeping track of our work in a scientific notebook.  Each notebook needs to have a clearly identifiable reason for existing.
+
+-  Each experiment we are testing should be a seperate Jupyter notebook in the `/code` directory. If you are testing similar parameters for the same variable it is okay to leave in one notebook.  For example, if you are testing how accuracy changes when trying 1,5 and 10 layers, it is okay to use one notebook. Think about what makes most sense.
+-  Each notebook should include the date (year-month-day) and a brief title that makes sense.
+	ex: `2018-07-10_layer_numbers.ipynb`.  Use the same title for similar experiments. If you are doing a step by step code, please include numbers to verify ex: `2018-07-10_layer_numbers_1.ipynb` and `2018-07-10_layer_numbers_2.ipynb`
+- Each notebook should have Specific sections that need to be included in every notebook.
+	- **Date**:
+	- **Author(s)**:
+	- **Purpose**: Ex: In order to test the accuracy when adding layers, we will run this experiment. 
+	- **Background**: Anything you need to know to understand the reasoning and rerun the experiment.
+		-  Is this experiment based off the results of another notebook? Clearly state which previous notebook.
+		-  What data is being used? 
+		-  Which subset of data?
+	- **Experiment**: This is where you put the code with comments. 
+	- **Results**: This is where you can summarize the results. Spend time to make visualization if it makes explaining the results easier.
+	- **Conclusions**: 
+		-  What conclusions can you make from these results? 
+		-  Did you find something that works and we should keep using? 
+		-  Did you find out that does not work and we should stop using
+		-  **What are the next experiments to try next?**
+
 ## Code
 
 -   organize source code in logical units or building blocks
@@ -66,7 +89,7 @@ project_title/
 
 Version control is handled by git and the project repository is kept on Github. If there is any type of idea for code improvement make a issue.
 
-### To make changes to the project 
+## To make changes to the project 
 
 -  fork repository, so you have your own copy
 -  make changes

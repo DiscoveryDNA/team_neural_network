@@ -1,0 +1,4 @@
+data/*
+
+# exception to the rule
+!somefolder/.gitkeep 

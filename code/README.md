@@ -4,6 +4,18 @@ Please document the *date*, *experiment purpose* and *notebook link* every time 
 
 ---
 
+2018-07-17
+
+**Purpose**:
+
+To test whether shuffling the input improves the accuracy.
+
+**Experiment**:
+
+[2018-07-17_shuffling_on_padding_at_the_end_with_size_1000.ipynb](2018-07-17_shuffling_on_padding_at_the_end_with_size_1000.ipynb)
+
+---
+
 2018-07-16
 
 **Purpose**:

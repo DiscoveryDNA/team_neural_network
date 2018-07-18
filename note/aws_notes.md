@@ -13,7 +13,7 @@ From now on, we are going to be using [Spot Instances](https://aws.amazon.com/ec
 ## Workflow
 0. Make sure you are in "US West Oregon". This is the closest regions that allows P2 and P3 spot instances.
 1. Click "Spot Request" in the left hand menu and click the blue "Request Spot Instances". Everything is the default setting with the exception of:
-  - AMI: deep_learning_AWS_ubuntuV9_28June2018
+  - AMI: deep_learning_AWS_ubuntuV9_18July2018
   - Instance type(s): close C3 and choose p2.xlarge
   - Availability Zone:  us-west-2a (so you can use the group_volume)
   - Security Group: deep_learning_security

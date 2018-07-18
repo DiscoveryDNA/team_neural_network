@@ -4,6 +4,18 @@ Please document the *date*, *experiment purpose* and *notebook link* every time 
 
 ---
 
+2018-07-18
+
+**Purpose**:
+
+Try more tests in order to confirm the shuffling result on 2018-07-17.
+
+**Experiment**:
+
+[2018-07-18_more_tests_with_shuffling.ipynb](2018-07-18_more_tests_with_shuffling.ipynb)
+
+---
+
 2018-07-17
 
 **Purpose**:

@@ -1,3 +1,5 @@
+# Note! This file is archived, and should not be used.
+
 """Code for transforming the fasta DNA data into one hot encoding format."""
 
 import os

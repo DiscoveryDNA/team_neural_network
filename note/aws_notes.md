@@ -26,7 +26,7 @@ From now on, we are going to be using [Spot Instances](https://aws.amazon.com/ec
 7.  The Amazon Deep Learning AMI uses Anaconda virtual environments to host and manage many different deep learning frameworks at the same time. Hence, you need to choose which deep learning framework you want to use at the beginning of each session:
   - For *TensorFlow(+Keras2) with Python3 (CUDA 9.0 and Intel MKL-DNN)*, use the command (type it anywhere in the terminal): `source activate tensorflow_p36`. This will take about 2 minutes to run.
   - For any other framework, follow the instruction detailed in the terminal window at the beginning of each session.
-8.  To access the Jupyter Notebook, use the command: `jupyter notebook`.
+8.  To access the Jupyter Notebook, use the command: `jupyter notebook`. [Click here](#notes-on-terminating-the-jupyter-notebook-session) for important information about terminating the Jupyter Notebook session.
 9.  Look for the sentence 'Copy/paste this URL into your browser when you connect for the first time, to login with a token:' in the terminal window. Copy the URL after this sentence **verbatim** into the browser (i.e. do not change `localhost` to anything else).
 10.  By this point, you should be able to access the jupyter notebook in the browser.
 11.  A quick way to test GPU is running: open the notebook 'tutorials/ensorFlow/3_mnist_from_scratch.ipynb', and run cells. Then in another terminal window connected to the EC2 instance run the command: `nvidia-smi -l 1`. This will update every second and you should see GPUs running in real time. Use this command to monitor your GPU usage while running tensorflow.  
@@ -92,4 +92,12 @@ If you change the size of the volume you attach, you have to tell your image to 
 
 `resize2fs /dev/xvda1`
 
+## Notes on Terminating the Jupyter Notebook Session
+It is crucial that you terminate the Jupyter Notebook session in the correct way. Otherwise, you would not be able to log back into the Jupyter Notebook (in the normal way) again. To terminate a Jupyter Notebook session, always press `Ctrl-c` then `y` in the terminal. Just clicking the `Logout` button on the webpage does not help.
 
+If you did not close a session in the way mentioned above, and you cannot log back into the Jupyter Notebook again, use the following steps to close the notebook:
+
+1. Issue `jupyter notebook list` in the terminal. It would list all currently running Jupyter Notebook sessions.
+2. See if it lists the URL corresponding to port 8888. If there is such a URL, issue `jupyter notebook stop 8888`.
+3. Issue `jupyter notebook list` again. The returned list should be empty now.
+4. Log back into the Jupyter Notebook normally by issuing `jupyter notebook` and copying the URL prompted.

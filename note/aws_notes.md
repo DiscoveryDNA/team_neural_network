@@ -1,16 +1,18 @@
-## To start an instance on spot instance
+# Using AWS in the DiscoveryDNA Neural Network Team
 
-You can create AMIs from any instance.  An Amazon Machine Image [Amazon Machine Image](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html). An AMI includes the following:
+The Amazon Web Services (AWS) is a cloud computing service.  It essentially allows you to create and use any size computer you can imagine.  We in the Neural Network team use it to utilize GPU power when running Tensor Flow and have a central location for our large datasets. 
 
-- A template for the root volume for the instance (for example, an operating system, an application server, and applications)
-- Launch permissions that control which AWS accounts can use the AMI to launch instances
-- A block device mapping that specifies the volumes to attach to the instance when it's launched
+## Important Vocabulary 
 
-You can create an AMI from any instance that you create. This is how we will manage our EC2 images. We will terminate every instance when it is not in use, with the exception of t2.nano and t2.micro. 
+- **EC2**: Stands for Elastic Cloud Commputing.  An EC2 instance is essentially a computer you start in the cloud.  You pay for the size and time you use the machine. Therefore it is essential that you only use the size you need for the time you need it. It is possible to accidently spend a lot of money very fast. Ciera does not like wasting money and will get mad.
+- **Volume**: Disk space for your machine.  Think of as a flash drive or hard drive. Volumes are also created as the root drive for your EC2 instance.  These root drives are started and terminated with the EC2.
+- **AMIs**:  An Amazon Machine Image [Amazon Machine Image](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html). You can create AMIs from any instance. An AMI is essentially the directions for building your EC2. An AMI includes the following:
+  - A template for the root volume for the instance (for example, an operating system, an application server, and applications)
+  - Launch permissions that control which AWS accounts can use the AMI to launch instances
+  - A block device mapping that specifies the volumes to attach to the instance when it's launched
+- **Spot Instance**: This is the service we use to start our EC2 images. [Spot Instances](https://aws.amazon.com/ec2/spot/getting-started/) allow us to use instances at a fraction of the cost because we are using "left over" AWS resources that are not in use by other people/busineses. 
 
-From now on, we are going to be using [Spot Instances](https://aws.amazon.com/ec2/spot/getting-started/). Spot instances will allow us to use instances at a fraction of the cost. 
-
-## Starting EC2 Image and connecting to Jupyter notebook
+## Starting EC2 image and connecting to Jupyter notebook
 0. Make sure you are in "US West Oregon". This is the closest regions that allows P2 and P3 spot instances, which are used to provide GPU utilzation when running Tensor Flow. 
 1. Click "Spot Request" in the left hand menu and click the blue "Request Spot Instances". Everything is the default setting with the exception of:
   - **AMI**: deep_learning_AWS_ubuntuV9_18July2018
@@ -33,9 +35,10 @@ From now on, we are going to be using [Spot Instances](https://aws.amazon.com/ec
 9.  Look for the sentence 'Copy/paste this URL into your browser when you connect for the first time, to login with a token:' in the terminal window. Copy the URL after this sentence **verbatim** into the browser (i.e. do not change `localhost` to anything else).
 10.  By this point, you should be able to access the jupyter notebook in the browser.
 11.  When finished, if you installed new software, make a new AMI and name accordingly. 
+12.  We will terminate every instance when it is not in use, with the exception of t2.nano and t2.micro, which you can leave open for up to a week. 
 12.  Terminate instance when done and Slack Ciera. 
 
-### Notes on Terminating the Jupyter Notebook Session
+## Notes on terminating the jupyter notebook session
 
 It is crucial that you terminate the Jupyter Notebook session in the correct way. Otherwise, you would not be able to log back into the Jupyter Notebook (in the normal way) again. To terminate a Jupyter Notebook session, always press `Ctrl-c` then `y` in the terminal. Just clicking the `Logout` button on the webpage does not help.
 
@@ -81,9 +84,9 @@ You need to properly detach volume to avoid corruption of volume.
 
 \* There are ways to assign a volume to an instance and automatically attach at every bootup. But currently not using these, but def useful in future.
 
-## Workflow for doing neural network training:
+## Workflow for doing neural network training
 
-### Useful tips for Using Keras with GPU
+### Useful tips for using Keras with GPU
 
 - For some neural networks, there are layers specifically designed for GPU acceleration. For example, for LSTM layer, there are two different options in Keras: `LSTM` and `CuDNNLSTM`. `LSTM` should only be used with CPU, using it with GPU would be > 2 times slower than CPU. Instead, you should use `CuDNNLSTM` with GPU. `CuDNNLSTM` achieves the same result as `LSTM` but is tailored for GPU. Using it can easily achieve a > 10 times speed boost when comparing with using CPU.
 - For rnn networks, you should always use the ‘CuDNN’ version of layers in order for GPU acceleration to work properly.

@@ -73,6 +73,17 @@ You need to properly detach volume to avoid corruption of volume.
 2. Detach volume (from AWS GUI Volumes section)
 3. If you are unable to detach volume, take a snap shot of the volume and force detach or terminate instance. This way you have a backup of the volume you can restart if your volume is broken.  Likely the volume is fine though. It's analogous to properly detaching a flash drive from your computer vs just pulling it out.
 
+**Steps for desizing volume**
+
+AWS does not allow us to create a new volume with a smaller size from a snapshot. It would return an error message `“The size of a volume can only be increased, not decreased.” `
+
+To desize a volume properly:
+
+1. Create a new volume.
+2. Attach both old and new volume to a same machine.
+3. Move the data from the old volume to the new volume.
+4. Delete the old volume.
+
 **Useful commands**
 - `lsblk` - look at your volumes
 - `sudo file -s /dev/xvdf` ask if your volume is formatted. If output is data then it is *not* formatted.

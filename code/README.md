@@ -4,6 +4,30 @@ Please document the *date*, *experiment purpose* and *notebook link* every time 
 
 ---
 
+2018-07-29
+
+**Purpose**:
+
+Pointing out a fault in previous experiments, and testing the old neural network on new correct one-hot encoded output with motif attached
+
+**Experiment**:
+
+[2018-07-29_pointing_out_a_fault_in_previous_experiments.ipynb](2018-07-29_pointing_out_a_fault_in_previous_experiments.ipynb)
+
+---
+
+2018-07-24
+
+**Purpose**:
+
+See if the trained model indeed produces random results on randomly generated sequences as a negative control
+
+**Experiment**:
+
+[2018-07-24_random_sequence_negative_control.ipynb](2018-07-24_random_sequence_negative_control.ipynb)
+
+---
+
 2018-07-18
 
 **Purpose**:

@@ -80,7 +80,7 @@ AWS does not allow us to create a new volume with a smaller size from a snapshot
 To desize a volume properly:
 
 1. Create a new volume.
-2. Attach both old and new volume to a same machine.
+2. Attach both old and new volumes to a same machine.
 3. Move the data from the old volume to the new volume.
 4. Delete the old volume.
 

@@ -1,11 +1,11 @@
 # Neural Network Team
 
-This is the home repo for the Neural Network team in the DiscoveryDNA group.  The aim is to build and employ a Neural Network, specifically a Recurrent Neural Network (RNN) for redicting enchancer function in non-coding regions of *Drosophila* genomes. We use Python, Keras, Tensorflow, and Amazon Web Services as our enviroment.  
+This is the home repo for the Neural Network team in the DiscoveryDNA group.  The aim is to build and employ a Neural Network, specifically a Recurrent Neural Network (RNN) for predicting enchancer function in non-coding regions of *Drosophila* genomes. We use Python, Keras, Tensorflow, and Amazon Web Services as our enviroment.  
 
 ## Team Members
 
--  **Current**: Adam Stafford & Yichen Fang 
--  **Previous**: Tianhao Zang
+-  **Current**: Adam Stafford, Zhanyuan Zhang & Yichen Fang 
+-  **Previous**: Tianhao Zhang
 
 ## About Organization
 

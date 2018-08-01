@@ -70,6 +70,7 @@ After setting up the EC2 image on AWS, you need to attach volume so you have dis
 You need to properly detach volume to avoid corruption of volume.
 
 1. In EC2 instance terminal unmoun using: `sudo umount -d /dev/xvdf`
+    * If encounter 'target is busy' error, try `sudo umount -l /dev/xvdf`
 2. Detach volume (from AWS GUI Volumes section)
 3. If you are unable to detach volume, take a snap shot of the volume and force detach or terminate instance. This way you have a backup of the volume you can restart if your volume is broken.  Likely the volume is fine though. It's analogous to properly detaching a flash drive from your computer vs just pulling it out.
 

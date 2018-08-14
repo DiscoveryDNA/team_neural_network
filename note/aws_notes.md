@@ -28,6 +28,7 @@ The Amazon Web Services (AWS) is a cloud computing service.  It essentially allo
 4.  Copy the instance's public dns.
 5.  `cd` to the your key directory.
 6.  Use this command to access the instance: `ssh -L localhost:8888:localhost:8888 -i <your .pem filename> ubuntu@<your instance DNS>`. (**Note: This command is not the same as the one mentioned on the ec2 instance connecting page. For Jupyter Notebook to configure correctly, you need to use this command.**)
+    - If the warning "unprotected private key file" shows up, do `chmod 600 <your .pem filename>`.
 7.  The Amazon Deep Learning AMI uses Anaconda virtual environments to host and manage many different deep learning frameworks at the same time. Hence, you need to choose which deep learning framework you want to use at the beginning of each session:
   - For *TensorFlow(+Keras2) with Python3 (CUDA 9.0 and Intel MKL-DNN)*, use the command (type it anywhere in the terminal): `source activate tensorflow_p36`. This will take about 2 minutes to run.
   - For any other framework, follow the instruction detailed in the terminal window at the beginning of each session.

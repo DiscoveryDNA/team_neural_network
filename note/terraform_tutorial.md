@@ -12,7 +12,7 @@ and add it to your PATH.
 
 *Note for adding terraform to PATH*:
 1. Extracting the .zip file you downloaded will give you a binary file.
-2. To add terraform to PATH, simply move the terraform binary file to any of your bin folder (e.g. /usr/bin)
+2. To add terraform to PATH, simply moving the terraform binary file to any of your bin folder (e.g. /usr/bin)
 will do the trick. If this doesn't work, check [this tutorial](https://github.com/ravsau/aws-labs/blob/master/terraform-aws/terraform-ec2.MD).
     
 ## 2. Configuration
@@ -56,7 +56,7 @@ terraform init
 ```commandline
 terraform plan
 ```
-There's the example output:
+There's the example output:  
 ![image](images/plan.png)
 
 - To provision the ec2, run:

@@ -56,7 +56,7 @@ terraform init
 ```commandline
 terraform plan
 ```
-Here's the example output:  
+Here's an example output:  
 ![image](images/plan.png)
 
 - To provision the ec2, run:

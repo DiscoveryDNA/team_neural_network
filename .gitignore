@@ -1,4 +1,5 @@
 data/*
-
+venv/*
+.idea/*
 # exception to the rule
 !somefolder/.gitkeep 

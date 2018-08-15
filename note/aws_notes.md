@@ -19,7 +19,9 @@ The Amazon Web Services (AWS) is a cloud computing service.  It essentially allo
   - **Instance type(s)**: close C3 and choose instance type: 
     -  t2.nano or t2.micro for basic tasks (small data cleaning jobs, folder organization, installing, documentation)
     -  t2.xlarge for formatting large datasets
-    -  p2.xlarge for running tensorflow
+    -  p2.xlarge for running tensorflow  
+    *YiChen's suggestions:* To prevent jupyter notebook's kernel from crushing, use t2.xlarge for GPU-unrelated tasks and p2.xlarge for GPU-related;
+   use t2.micro only for data-unrelated tasks (e.g. changing the organization of directories).
   - **Availability Zone**:  us-west-2a (so you can use volumes)
   - **Security Group**: deep_learning_security 
   - **key**: oregon_group_key.pem

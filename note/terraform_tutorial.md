@@ -31,6 +31,7 @@ resource "aws_instance" "myInstance" {
   instance_type = "t2.micro"
   security_groups = ["deep_learning_security"]
   key_name = "oregon_group_key"
+  availability_zone = "us-west-2a"
 }
 ```
 *Note*: 

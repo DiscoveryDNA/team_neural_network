@@ -5,7 +5,37 @@ flatten(lst)
 curtail(lst, read_len, motif_number)
 prepare_input(training_size, test_size, length_read, original_list, motif_number)
 to_np_array(X_train, y_train, X_test, y_test)
+save_model(model, path)
+load_model(model_path, weights_path)
 """
+
+def save_model(model, path) :
+	"""
+	Save MODEL as a .json file and its weight as .h5 file to PATH
+	author: Zhanyuan Zhang
+	This function is inspired by Jason Brownlee's post
+	For details, look here: https://machinelearningmastery.com/save-load-keras-deep-learning-models/
+	"""
+	model_json = model.to_json()
+	with open(path, "w") as json_file:
+		json_file.write(model_json)
+	model.save_weights("model.h5")
+	print("Save model to " + path)
+
+def load_model(model_path, weights_path):
+	"""
+	Load a model with its weight
+	author: Zhanyuan Zhang
+	This function is inspired by Jason Brownlee's post
+	For details, look here: https://machinelearningmastery.com/save-load-keras-deep-learning-models/
+	"""
+	from keras.models import model_from_json
+	json_file(model_path, 'r')
+	load_model_json = json_file.read()
+	json_file.close()
+	loaded_model = models.model_from_json(loaded_model_json)
+	loaded_model.load_weights(weights_path)
+	print("Loaded model from " + model_path)
 
 
 def unpickle(path):

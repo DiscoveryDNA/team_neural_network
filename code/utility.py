@@ -36,6 +36,7 @@ def load_model(model_path, weights_path):
 	loaded_model = models.model_from_json(loaded_model_json)
 	loaded_model.load_weights(weights_path)
 	print("Loaded model from " + model_path)
+	return loaded_model
 
 
 def unpickle(path):

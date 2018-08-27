@@ -5,11 +5,11 @@ flatten(lst)
 curtail(lst, read_len, motif_number)
 prepare_input(training_size, test_size, length_read, original_list, motif_number)
 to_np_array(X_train, y_train, X_test, y_test)
-save_model(model, path)
+save_model(model, model_path, weights_path)
 load_model(model_path, weights_path)
 """
 
-def save_model(model, path) :
+def save_model(model, model_path, weights_path):
 	"""
 	Save MODEL as a .json file and its weight as .h5 file to PATH
 	author: Zhanyuan Zhang
@@ -17,10 +17,10 @@ def save_model(model, path) :
 	For details, look here: https://machinelearningmastery.com/save-load-keras-deep-learning-models/
 	"""
 	model_json = model.to_json()
-	with open(path, "w") as json_file:
+	with open(model_path, "w") as json_file:
 		json_file.write(model_json)
-	model.save_weights("model.h5")
-	print("Save model to " + path)
+	model.save_weights(weights_path)
+	print("Save model to " + model_path)
 
 def load_model(model_path, weights_path):
 	"""

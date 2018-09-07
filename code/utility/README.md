@@ -29,3 +29,8 @@ This folder contains files that serve as utilities to complete certain tasks. Th
 **4. Generating random pseudo-dna-sequence:**
 
 [4_random_sequence_generator.ipynb](4_random_sequence_generator.ipynb)
+
+---
+**5. Calculating the False Discovery Rate and the C-statistics of a model:**
+
+[FDR_and_C_stats.ipynb](FDR_and_C_stats.ipynb)

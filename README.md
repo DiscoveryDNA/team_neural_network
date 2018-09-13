@@ -4,8 +4,8 @@ This is the home repo for the Neural Network team in the DiscoveryDNA group.  Th
 
 ## Team Members
 
--  **Current**: Adam Stafford, Zhanyuan Zhang & Yichen Fang 
--  **Previous**: Tianhao Zhang
+-  **Current**: Adam Stafford, Zhanyuan Zhang, Thomas Lane, & Boren Tsai
+-  **Previous**: Tianhao Zhang & Yichen Fang 
 
 ## About Organization
 

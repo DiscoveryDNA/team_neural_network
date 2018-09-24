@@ -30,10 +30,10 @@ def load_model(model_path, weights_path):
 	For details, look here: https://machinelearningmastery.com/save-load-keras-deep-learning-models/
 	"""
 	from keras.models import model_from_json
-	json_file(model_path, 'r')
+	json_file = open(model_path, 'r')
 	load_model_json = json_file.read()
 	json_file.close()
-	loaded_model = models.model_from_json(loaded_model_json)
+	loaded_model = model_from_json(load_model_json)
 	loaded_model.load_weights(weights_path)
 	print("Loaded model from " + model_path)
 	return loaded_model

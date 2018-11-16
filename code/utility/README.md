@@ -37,12 +37,12 @@ This folder contains files that serve as utilities to complete certain tasks. Th
 
 **6. Generate words from motifs:**
 
-[Generate_words_by_motif.ipynb](Generate_words_by_motif.ipynb)
-[Generate_words_from_fasta_motifs.ipynb](Generate_words_from_fasta_motifs.ipynb)
-[Random_words_generated_by_motif.ipynb](Random_words_generated_by_motif.ipynb)
+[Generate_words_by_motif.ipynb](Generate_words_by_motif.ipynb)  
+[Generate_words_from_fasta_motifs.ipynb](Generate_words_from_fasta_motifs.ipynb)  
+[Random_words_generated_by_motif.ipynb](Random_words_generated_by_motif.ipynb)  
 
 ---
 **7. Count each motif's frequency (the first one) and generate .csv output file (the second one):**
 
-[count_motifs.ipynb](count_motifs.ipynb) 
-[generate_motif_freq_data.ipynb](generate_motif_freq_data.ipynb)
+[count_motifs.ipynb](count_motifs.ipynb)  
+[generate_motif_freq_data.ipynb](generate_motif_freq_data.ipynb)  

@@ -50,4 +50,4 @@ This folder contains files that serve as utilities to complete certain tasks. Th
 ---
 **8. Creates text file containing a Random Position Weight Matrix**
 
-[Random_PWM_Generator](Random_PWM_Generator)  
+[Random_PWM_Generator](Random_PWM_Generator.ipynb)  

@@ -46,3 +46,8 @@ This folder contains files that serve as utilities to complete certain tasks. Th
 
 [count_motifs.ipynb](count_motifs.ipynb)  
 [generate_motif_freq_data.ipynb](generate_motif_freq_data.ipynb)  
+
+---
+**8. Creates text file containing a Random Position Weight Matrix**
+
+[Random_PWM_Generator.ipynb](Random_PWM_Generator.ipynb)  

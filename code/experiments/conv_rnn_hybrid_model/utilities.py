@@ -1,3 +1,9 @@
+import os, shutil, pickle, shelve
+from Bio import SeqIO
+import numpy as np
+import tensorflow as tf
+import matplotlib.pyplot as plt
+
 def sampling(src, dest, num_samples, seed=42):
     """  
     Sample NUM_SAMPLES of data from SRC and copy them to DEST.
@@ -23,6 +29,7 @@ def one_hot_encoding(input_folder_path, output_file_path,
     Note: INPUT_FOLDER_PATH is a directory while OUTPUT_FILE_PATH
           is a file.
     """
+    import os
     # Use the following dictionary to perform the transformation
     base_pairs = {'A': [1, 0, 0, 0], 
                   'C': [0, 1, 0, 0],

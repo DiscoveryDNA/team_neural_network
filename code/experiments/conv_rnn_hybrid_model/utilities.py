@@ -1,8 +1,8 @@
-#import os, shutil, pickle, shelve
-#from Bio import SeqIO
-#import numpy as np
-#import tensorflow as tf
-#import matplotlib.pyplot as plt
+import os, shutil, pickle, shelve
+from Bio import SeqIO
+import numpy as np
+import tensorflow as tf
+import matplotlib.pyplot as plt
 
 
 def sampling(src, dest, num_samples, seed=42):
@@ -172,3 +172,104 @@ def dianostic_plots(train_acc, train_loss, val_train_acc, val_loss):
     plt.legend()
 
     plt.show()
+
+    
+# Define model:
+class HybridModel:
+    def __init__(self, K, M, input_length, rnn_size, config):
+        # Extract configaration of the model:
+        pool_size, strides = config['pool_size'], config['strides']
+        dr1, dr2 = config['dr1'], config['dr2'] # dropout rates
+        d = config['d'] # size of dense layers
+        optimizer = config['opt']
+        learning_rate = config['learning_rate']
+        is_training = config['is_training'] # to control the dropout layers
+        
+        # Create the placeholders for the inputs:
+        self.input = tf.placeholder(tf.float32, shape=[None, input_length, 4])
+        self.targets = tf.placeholder(tf.int32, shape=[None, ])
+        
+        # Define layers for the model:
+        self.K = K # number of filters
+        
+        self.conv = tf.layers.Conv1D(K, M,
+                                     strides=1, padding='valid',
+                                     use_bias=True, name='conv')
+        self.lm_cell_fw = tf.nn.rnn_cell.LSTMCell(num_units = rnn_size, dtype = tf.float32, name='lm_cell_fw')
+        self.lm_cell_bw = tf.nn.rnn_cell.LSTMCell(num_units = rnn_size, dtype = tf.float32, name='lm_cell_bw')
+        
+        # Feed in input
+        #print(self.input.shape)
+        self.activations = tf.nn.relu(self.conv(self.input))
+        #print(self.activations.shape)
+        outputs = tf.layers.max_pooling1d(self.activations, 
+                                          pool_size=pool_size,
+                                          strides=strides)
+        outputs = tf.layers.dropout(outputs,
+                                    rate=dr1,
+                                    training=is_training)
+        #print(outputs.shape)
+        
+        outputs, states = tf.nn.bidirectional_dynamic_rnn(self.lm_cell_fw,
+                                                          self.lm_cell_bw,
+                                                          outputs, dtype = tf.float32)
+        outputs = tf.concat(outputs, axis=2)
+        #print(outputs.shape)
+        outputs = tf.layers.dropout(outputs,
+                                    rate=dr2,
+                                    training=is_training)
+        
+        outputs = tf.nn.relu(tf.layers.dense(outputs, d, name='dense1'))
+        #print(outputs.shape)
+        output_logits = tf.layers.dense(outputs, 1, name='dense2')
+        #print(output_logits.shape)
+        
+        self.loss = tf.losses.sparse_softmax_cross_entropy(self.targets, output_logits)
+        #print(self.loss.shape)
+        self.global_step = tf.train.get_or_create_global_step()
+        self.train_op = optimizer.minimize(self.loss)
+        self.saver = tf.train.Saver()
+   
+tf.reset_default_graph() # Reset the computational graph before defining a new model.
+
+optimizers = {'adam': tf.train.AdamOptimizer(learning_rate=1e-3),
+              'rmsprop': tf.train.RMSPropOptimizer(learning_rate=1e-2)}
+opt = optimizers['rmsprop']
+model_config = {'pool_size': 5, 'strides': 5, 'dr1': 0.6, 'dr2': 0.7, 'd': 20, 
+          'opt': opt, 'learning_rate': 1e-2, 'is_training': True}
+model = HybridModel(K=30, M=15, input_length=1028, rnn_size=15, config=model_config)
+
+# Define training function:
+def train(model, train_x, train_y, val_x, val_y, config, verbose=True, print_every=10):
+    epochs, iteration, output_path = config['epochs'], config['iteration'], config['output_path']
+    val_loss_record = []
+    with tf.Session() as sess:
+        sess.run(tf.global_variables_initializer())
+        for epoch in range(epochs):
+            print("epoch {}".format(epoch))
+            for iters in range(iteration):
+                # Here is how you obtain a batch:
+                batch_size = train_x.shape[0] // iteration
+                
+                feed = {model.input: train_x, model.targets: train_y}
+                model.is_training = True
+                step, train_loss, _ = sess.run([model.global_step, model.loss, model.train_op], feed_dict=feed)
+                if verbose:
+                    if iters % print_every == 0:
+                        print("    iteration {}, train_loss: {}".format(iters, train_loss))
+            feed = {model.input: val_y, model.targets: val_y}
+            model.is_training = False
+            val_loss = sess.run([model.loss], feed_dict=feed)
+            val_loss_record.append(val_loss)
+            print("validation loss: {}".format(val_loss))
+        # Here is how you save the model weights
+        model.saver.save(sess, output_path)
+    return val_loss_record
+
+# Save the model for later analysis
+save_model_path = '/home/ubuntu/data/team_neural_network/code/models'
+model_name = 'hybrid_net-tensorflow.h5'
+output_path = os.path.join(save_model_path, model_name)
+training_config = {'epochs': 35, 'iteration': 100, 'output_path': output_path}
+
+val_loss_record = train(model, train_x, train_y, val_x, val_y, training_config)

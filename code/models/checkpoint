@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/ubuntu/data/team_neural_network/code/models/hybrid_net-tensorflow.h5"
+all_model_checkpoint_paths: "/home/ubuntu/data/team_neural_network/code/models/hybrid_net-tensorflow.h5"

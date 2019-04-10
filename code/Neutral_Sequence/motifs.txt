@@ -1,8 +1,0 @@
-> motif1
-GCATAAAAAA
-> motif2
-TAATCC
-> motif3
-GGCCATAAAA
-> motif4
-ATTACGTAAT

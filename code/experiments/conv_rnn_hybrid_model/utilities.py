@@ -151,7 +151,7 @@ def data_split(data_x, data_y, val_split=0.2, seed=42):
     return train_x, train_y, val_x, val_y
 
 
-def dianostic_plots(train_acc, train_loss, val_train_acc, val_loss):
+def dianostic_plots(train_acc, train_loss, val_acc, val_loss):
     """  Plot dianostic plots of a model:
     Plot 1: Traning loss & validation loss against epochs
     Plot 2: Training acc & validation acc against epochs
@@ -159,13 +159,13 @@ def dianostic_plots(train_acc, train_loss, val_train_acc, val_loss):
     epochs = range(1, len(train_acc) + 1)
     
     plt.plot(epochs, train_acc, '-', label='Training train_accuracy')
-    plt.plot(epochs, val_train_acc, '-', label='Validation Accuracy')
+    plt.plot(epochs, val_acc, '-', label='Validation Accuracy')
     plt.title('Training and Validation Accuracy')
     plt.xlabel('epoches')
     plt.legend()
 
     plt.figure()
-    plt.plot(epochs, loss, '-', label='Training Loss')
+    plt.plot(epochs, train_loss, '-', label='Training Loss')
     plt.plot(epochs, val_loss, '-', label='Validation Loss')
     plt.title('Training and Validation Loss')
     plt.xlabel('epoches')
@@ -173,6 +173,20 @@ def dianostic_plots(train_acc, train_loss, val_train_acc, val_loss):
 
     plt.show()
 
+def pad_for_detector(input_x, kernel_size):
+    """ Pad the input matrix such that the (i, k) entry of the output 
+        matrix is the score of motif detector k aligned to position i.
+    input_x has shape = (N, n, 4)
+    kernel_size has shape m
+    output has shape = (N, n + 2m - 2, 4)
+    """
+    N, n, C = input_x.shape
+    pad_value, num_pad = 0.25, kernel_size - 1
+    pad_matrix = np.full((N, num_pad, C), pad_value)
+    return np.concatenate((pad_matrix, input_x, pad_matrix), axis=1)
+
+
+"""
     
 # Define model:
 class HybridModel:
@@ -273,3 +287,4 @@ output_path = os.path.join(save_model_path, model_name)
 training_config = {'epochs': 35, 'iteration': 100, 'output_path': output_path}
 
 val_loss_record = train(model, train_x, train_y, val_x, val_y, training_config)
+"""

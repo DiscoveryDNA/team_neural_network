@@ -185,6 +185,93 @@ def pad_for_detector(input_x, kernel_size):
     pad_matrix = np.full((N, num_pad, C), pad_value)
     return np.concatenate((pad_matrix, input_x, pad_matrix), axis=1)
 
+def get_activated_subseq(activations, test_seq, m):
+    #################################################################
+    # Extract those in the TEST_SEQUENCE that has least one position
+    #     having positive activation.
+    # m: length of filter
+    #################################################################
+    N, L, C = activations.shape
+    activated_subseq = {}
+    for i in range(C): # for each filter
+        activated_subseq[i] = []
+        activation = activations[:, :, i]
+        
+        # candidate and potential_start has a shape (N, )
+        candidate, potential_start = np.max(activation, axis=1), np.argmax(activation, axis=1)
+        
+        # activated_indices should have a shape (K, ), where K = # of positive activations
+        activated_indices = [i for i in range(N) if candidate[i] > 0]
+        K = len(activated_indices)
+        # activated_seq should have a shape(K, n + 2m - 2, 4)
+        activated_seq, ends = test_seq[activated_indices, :, :], potential_start[activated_indices]
+        #starts = ends - m + 1
+        starts = ends + m - 1
+        for k in range(K):
+            start, end = starts[k], ends[k]
+            #activated_subseq[i].append(activated_seq[k, start:(end+1), :])
+            activated_subseq[i].append(activated_seq[k, end:(start+1), :])
+    return activated_subseq
+
+################################################################################
+# Start adding helper functions from 4-13 experiment
+################################################################################
+def get_char_list(activated_subseq):
+    """ Given an activated subsequence of a filter, convert it from from indices to characters
+    """
+    def seq2char(seq):
+        one_hot2int = {0:'A', 1:'C', 2:'G', 3:'T', 4:'N'}
+        int_list = []
+        for s in seq:
+            temp = np.where(s == 1)[0]
+            if temp.size == 0:
+                int_list.append(4)
+            else:
+                int_list.append(temp[0])
+        return [one_hot2int[i] for i in int_list]
+    char_list = []
+    for i, seq in enumerate(activated_subseq):
+        char_list.append(seq2char(seq))
+    return np.array(char_list)  
+
+def get_freqs(char_list):
+    uniques, counts = [], []
+    N, m = char_list.shape
+    for i in range(m):
+        unique, count = np.unique(char_list[:, i], return_counts=True)
+        counts.append(count/N)
+        uniques.append(unique)
+
+    return uniques, counts
+
+def get_candidates(uniques, freqs, threshold):
+    candidates = []
+    assert len(freqs) == len(uniques)
+    for i in range(len(freqs)):
+        unique, freq = uniques[i], freqs[i]
+        sorted_indices = np.argsort(-freq)
+        size, freq_sum = 1, 0
+        while freq_sum < threshold:
+            candi_idx = sorted_indices[:size]
+            freq_sum = freq[candi_idx].sum()
+            size += 1
+        candi = unique[candi_idx]
+        candidates.append(candi)
+    return candidates
+
+def get_motif(candidates):
+    # Find all the words by dynamic programming
+    W = [candidates[0]]
+    for i in range(1, len(candidates)):
+        temp = W[i - 1].copy()
+        W.append([])
+        for char in candidates[i]:
+            for word in temp:
+                W[i].append(word+char)
+    return W[-1]
+############################################################################
+# End of adding helper functions from 4-13 experiment
+############################################################################
 
 """
     

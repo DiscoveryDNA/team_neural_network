@@ -64,8 +64,8 @@ After setting up the EC2 image on AWS, you need to attach volume so you have dis
   C. Select an existing volume.
 1. Attach volume to instance in gui by clicking on volume and selecting attach, choose the running EC2 instance you want to attach to. If you do not see your EC2 instance, this may because the instance and the volumes were started in different regions. 
 2. **ONLY FIRST TIME USING IT**: Create file system on your volume: `sudo mkfs -t ext4 device_name`.  I ran into a bug in which this doesn't work, but this does: `mkfs -t ext4 -L rootfs <device_name>`
-3. Mount the volume from within the instance using `sudo mount device_name mount_point` (example `sudo mount /dev/xvdf data`) 
-  - use `lsblk` to see device name
+3. Mount the volume from within the instance using `sudo mount device_name mount_point` (example `sudo mount /dev/xvdf data`)
+  - use `lsblk` to see device name! Many times the device is renamed. For example the nvidia AMIs rename to `/dev/nvme1n1`
 4. change permission for directory: `sudo chmod 777 -R mount_point` to gain access 
 
 **Steps for detaching volume**

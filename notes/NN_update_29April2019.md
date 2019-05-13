@@ -1,7 +1,5 @@
 # About
 
-Author: Ciera Martinez
-
 This document outlines the work that has been done along with current next steps for the Neural Network project. 
 *note*: *This document is still under construction*.
 

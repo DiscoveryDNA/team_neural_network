@@ -33,6 +33,7 @@ These datasets have been formatted and run to train bi-directional LSTM. The PWM
 	- [ ] How many sequences do we have?
 	- [ ] Need to run some tests to verify what Thomas says
 	- [ ] Experiments 1. Need to run real PWM on them and train neural network with "random" functional assignments. 2. Use these sequences and run through most bi-directional model, need to get score on confidnece of if the sequence is functional or not. What kind of scores are we getting? We know a bit about the scores. Do the scores cluster with how the sequences were generated? This could tell us if the 
+- [ ] 	Create Random alignments following a certain model of substituion using [pyvolve](https://github.com/sjspielman/pyvolve). This could be useful to test assumptions about the model reading similarity in sequence over the type of data.
 
 ## Cross Species Data
 

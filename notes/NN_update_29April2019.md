@@ -54,7 +54,7 @@ These datasets have been formatted and run to train Bi-directional LSTM. The PWM
 	- acc: 0.9748 !!!
 	- Seems like we are at a really good point in our network and should stop trying to increase accuracy, but likely should do parameter optimization and add positive scores. 
 
-### 1b. To- Do Original Data Experiments
+### 1b. To-Do Original Montium Data Experiments
 
 - [ ] Parameter optimatization.  This mostly so we know that we are configuring our network correctly and most importantly learn how parameter optimization is performed. This is an important component to Neural Networks and we should all know the ins and outs.
 - [ ] Add negative  scores.  This is just to be thorough. It doesn't really make sense to just include one strand or the other. While I don't really think it will affect the score, I think it is imporant to include this information. 
@@ -65,18 +65,22 @@ The goal of these experiments is to understand what the model is telling us abou
 
 ### 1b. Data
 -	Random PWM of length (8,9,6,6) -  Mimics Dataset 1
--	[Random Sequences][https://drive.google.com/open?id=113Rztzwc0C1pAAQV2l9RUwkWkWkICAVC]
+-	-  Random Sequences: [here](https://drive.google.com/drive/folders/113Rztzwc0C1pAAQV2l9RUwkWkWkICAVC).  These sequences were made using [neutral_sequence_generator](https://github.com/DiscoveryDNA/neutral_sequence_generator), which Creates a DNA sequence that has motifs distributed at a specified frequency seperated by a neutral sequence that purposefully does not contain the motifs. This program uses SiteOut which was developed by researchers at Harvard University. Motifs used: hb, bcd, cad, gt.
 	- [ ] Need to learn a bit more about this data from Thomas. Where is his write up?
 	- [ ] How many sequences do we have?
 	- [ ] Need to run some tests to verify what Thomas says
-- [ ] Experiments 1. Need to run real PWM on them and train neural network with "random" functional assignments. 2. Use these sequences and run through most bi-directional model, need to get score on confidnece of if the sequence is functional or not. What kind of scores are we getting? We know a bit about the scores. Do the scores cluster with how the sequences were generated? This could tell us if the 
-- [ ] 	Create Random alignments following a certain model of substituion using [pyvolve](https://github.com/sjspielman/pyvolve). This could be useful to test assumptions about the model reading similarity in sequence over the type of data.
+
 
 ### 1b. experiments
+- Using random PWM on real data: [2019-04-25_new_data_with_size_1000_bidirectional_using_random_data.ipynb ](https://github.com/DiscoveryDNA/team_neural_network/blob/master/code/experiments/2019-04-25_new_data_with_size_1000_bidirectional_using_random_data.ipynb). Use the real nucleotides, with fake TFBS data. The "fake" PWM were the same length as PWM scores Dataset 1. 
+	- val_acc: 0.5926
+	- Bam. The "real" TFBS are important for identifying function over non-functional sequences. 
 
 ### 1b. To- Do "Control" Experiments
 
-- [ ] Another question I keep asking myself is, is the model just looking at sequence similarity? One way we could test this is to create alignments that were generated based on the Montium tree by simulating synthetic sequences along the tree, based on some sort of evoutional model. 
+- [ ] Experiments Type 1. Need to run real PWM on them and train neural network with "random" functional assignments. 
+- [ ] Experiment type 2. Use these sequences and run through most bi-directional model, need to get score on confidnece of if the sequence is functional or not. What kind of scores are we getting? We know a bit about the scores. Do the scores cluster with how the sequences were generated? 
+- [ ] Another question I keep asking myself is, is the model just looking at sequence similarity and thats it? One way we could test this is to create alignments that were generated based on the Montium tree by simulating synthetic sequences along the tree, based on some sort of evoutional model. Create Random alignments following a certain model of substituion using [pyvolve](https://github.com/sjspielman/pyvolve). This could be useful to test assumptions about the model reading similarity in sequence over the type of data.
 
 ## Cross Species Data
 

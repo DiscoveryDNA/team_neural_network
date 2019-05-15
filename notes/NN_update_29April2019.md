@@ -1,14 +1,16 @@
 # About
 
 This document outlines the work that has been done along with current next steps for the Neural Network project. 
-*note*: *This document is still under construction*.
 
-# Bidirectional LSTM Data
+*note*: *This document is still under construction* - cm 5/12/19.
 
-## Original Montium Data
+# 1. Bidirectional LSTM Data
 
-These datasets have been formatted and run to train bi-directional LSTM. The PWM Datasets are TFBS scores generated from map_motif. 
+## 1a. Original Montium Data Work
 
+These datasets have been formatted and run to train Bi-directional LSTM. The PWM datasets are TFBS scores generated from [map_motif2](https://github.com/DiscoveryDNA/map_motif2). 
+
+### Data
 -	3,544 Regions from 24 species (85056) raw nucleotide sequences labeled as functional or non-functional according to Kvon 2013 [3__24_only_raw_07March2018](https://drive.google.com/open?id=183cIcoAjtZtnxIvlZ5wXkFvwLdKj6RTH) 
 -	PWM Dataset 1 (bcd, cad, eve, zelda) [5_map_motif_no_threshold_14Nov2018](https://drive.google.com/open?id=19xUbC1KuxMBWwjveOtmyPKMYDc_dgoxQ)
 -	PWM Dataset 2 ( hb, kni, kr, twi) [5_TFBS_scores_19March2019](https://drive.google.com/open?id=1PTmQwwgBzEDFNDVRdGMS8bn5gZgk8jJt)
@@ -17,13 +19,13 @@ These datasets have been formatted and run to train bi-directional LSTM. The PWM
 
 -	First bi-directional [2019-01-29_shuffling_on_padding_at_the_end_with_size_1000_bidirectional.ipynb](https://github.com/DiscoveryDNA/team_neural_network/blob/master/code/experiments/2019-01-29_shuffling_on_padding_at_the_end_with_size_1000_bidirectional.ipynb)
 	-	accuracy jumped to over 85%
-	-	using only a subset of the data - a key point here is that the randomization process is not random sequences across all sequences. They take a certain number of sequences 
-	-	Only 4 TFBS
+	-	using only a subset of the data - a key point here is that the randomization process is not random sequences across all 3,544 sequences. Instead, we take the first ~200 regions, and randomly sample from that. That means that some of the regions are never represented in these first test models. 
+	-	Only 4 TFBS (Dataset 1: bcd, cad, eve, zelda)
 	-	Only on the positive strand 
 -	Bi-directional with only nucleotide sequences [2019-02-04_shuffling_on_padding_at_the_end_with_size_1000_bidirectional_no_TFBS.ipynb](https://github.com/DiscoveryDNA/team_neural_network/blob/master/code/experiments/2019-02-04_shuffling_on_padding_at_the_end_with_size_1000_bidirectional_no_TFBS.ipynb)
 	-	Accuracy 71%
 -	Bi-directional without nucleotides, only TFBS scores [04_shuffling_on_padding_at_the_end_with_size_1000_bidirectional_only_TFBS.ipynb](https://github.com/DiscoveryDNA/team_neural_network/blob/master/code/experiments/2019-02-04_shuffling_on_padding_at_the_end_with_size_1000_bidirectional_only_TFBS.ipynb)
--	[ ] Run on whole dataset - TO DO
+-	We did run on whole dataset [ ]()
 
 ## Control data
 

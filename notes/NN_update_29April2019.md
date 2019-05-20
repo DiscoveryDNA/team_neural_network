@@ -95,24 +95,25 @@ The importance of this data is overall to test the generality of the data beyond
 	- [ ] What would we want to do with them?
 -  [ ] Lifting across more thatn D.mel genomes.  Did we ever do this? What genomes can I get?
 
+# 2a. Hybrid Model
+
+This model is based off the architecture used in thispaper: [DanQ: a hybrid convolutional and recurrent deep neural network for quantifying the function of DNA sequences ](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4914104/). The first layers of
+the model are designed to scan sequences for motif sites through convolution filtering. It is called the hybrid model because it uses two types of architectures 1. The first layers of
+the model are designed to scan sequences for motif sites through convolution filtering. 2.  a Recurrent layer (of the LSTM type) to try to discover a “grammar” for how these single motifs work together (a layer for looking at the distance between motifs).
+
+This greatest part of this work is that it is able to input just the nucleotide sequences to understand how the model is predicting function. After the model is built, you can identify what each layer is doing, literally by finding the nucleotide position, then grabbing the sequences around that position. So you can input a group of sequences, then get a list of "motifs". There are some problems, in that you really don't know if the layer is considered "important" for the model prediction, you just know what the layer is looking at when predicting. 
+
+-[ ]  Add README to Hybrid Model directory
+
+## 2a. Experiments
+
+- Intitial Data Prep and Architecture: [2019-3-22_tried_conv_rnn_hybrid_model.ipynb](https://github.com/DiscoveryDNA/team_neural_network/blob/master/code/experiments/conv_rnn_hybrid_model/2019-3-22_tried_conv_rnn_hybrid_model.ipynb) 
+	- 	val_acc: 0.9023
 
 
-
-# Hybrid Model
-
-- Add README to Hybrid Model 
-
-This model is based of this paper: [ ]().  Basically the input is JUST the nucleotide sequences and it is run through a hybrid of ... and ....
-
-## Experiments
-
-- [Original Implementation](https://github.com/DiscoveryDNA/team_neural_network/blob/master/code/experiments/conv_rnn_hybrid_model/2019-3-22_tried_conv_rnn_hybrid_model.ipynb)
-- [Motif Exraction](https://github.com/DiscoveryDNA/team_neural_network/blob/master/code/experiments/conv_rnn_hybrid_model/2019-4-13_motif_extracting.ipynb)
-- [Train on Larger Dataset](https://github.com/DiscoveryDNA/team_neural_network/blob/master/code/experiments/conv_rnn_hybrid_model/train_on_larger_dataset.ipynb)
-
-
-# Other TO-DO
+#  Other TO-DO
 
 - [ ] Earlier we experimented with adding padding to the front. Does this make a difference with the new bidirectional Architecture?
-- [ ] What is the best way to save results of our accuracy, c-statistic, and FDR?
+- [ ] What is the best way to save results of our accuracy, c-statistic, and FDR? I really need to scrap all this information from the experiments.
+- [ ] How do we visualize all of this?
 

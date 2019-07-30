@@ -40,7 +40,7 @@ class HybridNet(nn.Module):
     def forward(self, seq):
         self.activation_seq = F.relu(self.conv1(seq))
         out = nn.MaxPool1d(kernel_size=15, stride=15)(self.activation_seq)
-        out = nn.Dropout(p=self.p1)(out)
+        
 #         out = nn.Dropout(p=self.p1)(self.activation_seq)
         
         #################################################################################
@@ -60,10 +60,11 @@ class HybridNet(nn.Module):
         N, T, C = out.shape
         #out = torch.transpose(out, 1, 2)
         out = out.reshape(N, -1)
-        out = nn.Dropout(p=self.p2)(out)
         out = self.fc1(out)
+        out = nn.Dropout(p=self.p1)(out)
         out = F.relu(out)
         out = self.fc2(out)
+        out = nn.Dropout(p=self.p2)(out)
         out = torch.squeeze(out)
         return nn.Sigmoid()(out)
 
@@ -95,6 +96,7 @@ def train(model, train_dataset, val_dataset, config):
         tic = time.time()
         for i, (batch, labels) in enumerate(train_loader):
             # Forward pass and calculating loss
+            batch, labels = batch.to(device), labels.to(device)
             y_hat = model(batch)
             loss = criterion(y_hat, labels)
             

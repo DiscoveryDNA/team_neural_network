@@ -11,7 +11,7 @@ import time
 # Reference for connecting Conv1D and LSTM: https://mxnet.incubator.apache.org/versions/master/tutorials/basic/reshape_transpose.html
 class HybridNet(nn.Module):
     
-    def __init__(self, pesudo_input, num_filters, filter_size, rnn_size, fc_out, dp1, dp2, 
+    def __init__(self, pesudo_input, num_filters, filter_size, rnn_size, fc_out1, fc_out2, dp1, dp2, dp3, 
                  num_rnn_layers=1, rnn_dropout=0):
         super(HybridNet, self).__init__()
         self.conv1 = nn.Conv1d(in_channels=4, out_channels=num_filters, kernel_size=filter_size)
@@ -32,16 +32,18 @@ class HybridNet(nn.Module):
         #out = torch.transpose(out, 1, 2)
         out = out.reshape(N, -1)
         print('shape after flattening {}'.format(out.shape))
-        self.fc1 = nn.Linear(T*C, fc_out, bias=True)
-        self.fc2 = nn.Linear(fc_out, 1)
+        self.fc1 = nn.Linear(T*C, fc_out1, bias=True)
+        self.fc2 = nn.Linear(fc_out1, fc_out2, bias=True)
+        self.fc3 = nn.Linear(fc_out2, 1)
         self.p1 = dp1
         self.p2 = dp2
+        self.p3 = dp3
         
     def forward(self, seq):
         self.activation_seq = F.relu(self.conv1(seq))
         out = nn.MaxPool1d(kernel_size=15, stride=15)(self.activation_seq)
         
-#         out = nn.Dropout(p=self.p1)(self.activation_seq)
+        out = nn.Dropout(p=self.p1)(out)
         
         #################################################################################
         # Input of LSTM layer should have shape (sequence_length, batch_size, input_size)
@@ -61,10 +63,12 @@ class HybridNet(nn.Module):
         #out = torch.transpose(out, 1, 2)
         out = out.reshape(N, -1)
         out = self.fc1(out)
-        out = nn.Dropout(p=self.p1)(out)
         out = F.relu(out)
-        out = self.fc2(out)
         out = nn.Dropout(p=self.p2)(out)
+        out = self.fc2(out)
+        out = F.relu(out)
+        out = nn.Dropout(p=self.p3)(out)
+        out = self.fc3(out)
         out = torch.squeeze(out)
         return nn.Sigmoid()(out)
 

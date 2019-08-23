@@ -1,276 +1,101 @@
-import os, shutil, pickle, shelve
-from Bio import SeqIO
+import os
+import sys
+import json
+import time
+from functools import partial
 import numpy as np
-import matplotlib.pyplot as plt
-import torch.nn as nn
-import torch.nn.functional as F
-import torch
+# import tensorflow as tf
+# from tensorflow.python.framework import function
+from tqdm import tqdm
 
+def encode_dataset(*splits, encoder):
+    encoded_splits = []
+    for split in splits:
+        fields = []
+        for field in split:
+            if isinstance(field[0], str):
+                field = encoder.encode(field)
+            fields.append(field)
+        encoded_splits.append(fields)
+    return encoded_splits
 
-def sampling(src, dest, num_samples, seed=42):
-    """  
-    Sample NUM_SAMPLES of data from SRC and copy them to DEST.
-    Set random seed to be SEED.
+def stsb_label_encoding(labels, nclass=6):
     """
-    np.random.seed(seed)
-    all_data_lst = np.array(os.listdir(src))
-    n = len(all_data_lst)
-    sample_indices = np.random.choice(np.arange(n), num_samples, replace=False)
-    sample_files = all_data_lst[sample_indices]
-
-    for file in sample_files:
-        shutil.copy(os.path.join(src, file),
-                    dest)
-    print('copied samples to {}'.format(dest))
-
-
-def one_hot_encoding(input_folder_path, output_file_path,
-                     max_file_num=10000):
+    Label encoding from Tree LSTM paper (Tai, Socher, Manning)
     """
-    Given the data in INPUT_FOLDER_PATH, encode them and save
-    as a buffer called OUTPUT_FILE_PATH.
-    
-    Note: INPUT_FOLDER_PATH is a directory while OUTPUT_FILE_PATH
-          is a file.
-    """
-    import os
-    # Use the following dictionary to perform the transformation
-    base_pairs = {'A': [1, 0, 0, 0],
-                  'C': [0, 1, 0, 0],
-                  'G': [0, 0, 1, 0],
-                  'T': [0, 0, 0, 1],
-                  'a': [1, 0, 0, 0],
-                  'c': [0, 1, 0, 0],
-                  'g': [0, 0, 1, 0],
-                  't': [0, 0, 0, 1],
-                  'n': [0, 0, 0, 0],
-                  'N': [0, 0, 0, 0]}
+    Y = np.zeros((len(labels), nclass)).astype(np.float32)
+    for j, y in enumerate(labels):
+        for i in range(nclass):
+            if i == np.floor(y) + 1:
+                Y[j,i] = y - np.floor(y)
+            if i == np.floor(y):
+                Y[j,i] = np.floor(y) - y + 1
+    return Y
 
-    file_num_limit = max_file_num  # The maximum number of files to be decoded
-    file_count = 0
+def np_softmax(x, t=1):
+    x = x/t
+    x = x - np.max(x, axis=-1, keepdims=True)
+    ex = np.exp(x)
+    return ex/np.sum(ex, axis=-1, keepdims=True)
 
-    # Iterate through every file
-    all_regions = []
-    for file in os.listdir(input_folder_path):
-        # When the number of file decoded has reached the limit, stop
-        if file_count < file_num_limit:
-            data = list(SeqIO.parse(input_folder_path + file, "fasta"))
-            for n in range(0, len(data)):
-                # Extract the header information
-                header = data[n].description.split('|')
-                descr = data[n].description
-                regionID = header[0]
-                expressed = header[1]
-                speciesID = header[2]
-                strand = header[3]
-                # Complement all sequences in the negative DNA strand
-                #             if strand == '-':
-                #                 # Using the syntax [e for e in base_pairs[n]] to create a new pointer for each position
-                #                 one_hot.append([descr, expressed, speciesID, [[e for e in base_pairs[n]] for n in data[n].seq.complement()]])
-                #             else:
-                all_regions.append([descr, expressed, speciesID, [[e for e in base_pairs[n]] for n in data[n].seq]])
-            file_count += 1
+def make_path(f):
+    d = os.path.dirname(f)
+    if d and not os.path.exists(d):
+        os.makedirs(d)
+    return f
 
-    with open(output_file_path, mode="wb") as output:
-        print("save to {}".format(output_file_path))
-        pickle.dump(all_regions, output)
-    return all_regions
+def _identity_init(shape, dtype, partition_info, scale):
+    n = shape[-1]
+    w = np.eye(n)*scale
+    if len([s for s in shape if s != 1]) == 2:
+        w = w.reshape(shape)
+    return w.astype(np.float32)
 
+def identity_init(scale=1.0):
+    return partial(_identity_init, scale=scale)
 
-def curtail(lst, read_len):
-    """ A helper function of get_training_data
-    """
-    if len(lst) > read_len:
-        lst = lst[:read_len]
+def _np_init(shape, dtype, partition_info, w):
+    return w
+
+def np_init(w):
+    return partial(_np_init, w=w)
+
+class ResultLogger(object):
+    def __init__(self, path, *args, **kwargs):
+        if 'time' not in kwargs:
+            kwargs['time'] = time.time()
+        self.f_log = open(make_path(path), 'w')
+        self.f_log.write(json.dumps(kwargs)+'\n')
+
+    def log(self, **kwargs):
+        if 'time' not in kwargs:
+            kwargs['time'] = time.time()
+        self.f_log.write(json.dumps(kwargs)+'\n')
+        self.f_log.flush()
+
+    def close(self):
+        self.f_log.close()
+
+def flatten(outer):
+    return [el for inner in outer for el in inner]
+
+def remove_none(l):
+    return [e for e in l if e is not None]
+
+def iter_data(*datas, n_batch=128, truncate=False, verbose=False, max_batches=float("inf")):
+    n = len(datas[0])
+    if truncate:
+        n = (n//n_batch)*n_batch
+    n = min(n, max_batches*n_batch)
+    n_batches = 0
+    if verbose:
+        f = sys.stderr
     else:
-        for i in range(read_len - len(lst)):
-            lst.append([0, 0, 0, 0])
-    return lst
-
-
-def get_training_data(input_data, output_folder_path,
-                      max_len, train_x_name, train_y_name):
-    """ 
-    Convert INPUT_DATA to ready-to-be-fed training data and 
-        corresponding labels.
-    Save them to OUTPUT_FOLDER_PATH with name TRAIN_X_NAME and
-        TRAIN_Y_NAME.
-    INPUT_DATA is directly generated by the function one_hot_encoding. 
-    """
-    train_x, train_y = [], []
-    for region in input_data:
-        y, x = int(region[1]), region[3]
-        x = curtail(x, max_len)  # Curtail
-        x = np.array(x).flatten()  # Flatten
-        x = x.reshape((1000, 4))  # Reshape
-        train_x.append(x)
-        train_y.append(y)
-
-    train_x, train_y = np.array(train_x), np.array(train_y)
-
-    print(train_x.shape, train_y.shape)
-
-    with open(os.path.join(output_folder_path, train_x_name), mode="wb") as output:
-        print("save to {}".format(os.path.join(output_folder_path, train_x_name)))
-        pickle.dump(train_x, output)
-
-    with open(os.path.join(output_folder_path, train_y_name), mode="wb") as output:
-        print("save to {}".format(os.path.join(output_folder_path, train_y_name)))
-        pickle.dump(train_y, output)
-    return train_x, train_y
-
-
-def load_data(data_folder_path, train_x_name, train_y_name):
-    output_name = train_x_name
-    with open(os.path.join(output_folder_path, output_name), 'rb') as file:
-        data_x = pickle.load(file)
-
-    output_name = train_y_name
-    with open(os.path.join(output_folder_path, output_name), 'rb') as file:
-        data_y = pickle.load(file)
-
-    print(data_x.shape, data_y.shape)
-
-
-def data_split(data_x, data_y, val_split=0.2, seed=42):
-    """
-    Given totally N data, randomly sample N*VAL_SPLIT of them 
-        to form validation data.
-    Set random seed to SEED.
-    """
-    # Split it into training and validation data sets
-    N = data_x.shape[0]
-    num_val = int(N * val_split)
-
-    np.random.seed(seed)
-    val_indices = np.random.choice(np.arange(N), num_val, replace=False)
-    train_indices = np.arange(N)[~np.isin(np.arange(N), val_indices)]
-
-    train_x, train_y = data_x[train_indices], data_y[train_indices]
-    val_x, val_y = data_x[val_indices], data_y[val_indices]
-
-    print(N, train_x.shape, train_y.shape, val_x.shape, val_y.shape)
-    return train_x, train_y, val_x, val_y
-
-
-def dianostic_plots(train_acc, train_loss, val_acc, val_loss):
-    """  Plot dianostic plots of a model:
-    Plot 1: Traning loss & validation loss against epochs
-    Plot 2: Training acc & validation acc against epochs
-    """
-    epochs = range(1, len(train_acc) + 1)
-    
-    plt.plot(epochs, train_acc, '-', label='Training train_accuracy')
-    plt.plot(epochs, val_acc, '-', label='Validation Accuracy')
-    plt.title('Training and Validation Accuracy')
-    plt.xlabel('epoches')
-    plt.legend()
-
-    plt.figure()
-    plt.plot(epochs, train_loss, '-', label='Training Loss')
-    plt.plot(epochs, val_loss, '-', label='Validation Loss')
-    plt.title('Training and Validation Loss')
-    plt.xlabel('epoches')
-    plt.legend()
-
-    plt.show()
-
-def pad_for_detector(input_x, kernel_size):
-    """ Pad the input matrix such that the (i, k) entry of the output 
-        matrix is the score of motif detector k aligned to position i.
-    input_x has shape = (N, n, 4)
-    kernel_size has shape m
-    output has shape = (N, n + 2m - 2, 4)
-    """
-    N, n, C = input_x.shape
-    pad_value, num_pad = 0.25, kernel_size - 1
-    pad_matrix = np.full((N, num_pad, C), pad_value)
-    return np.concatenate((pad_matrix, input_x, pad_matrix), axis=1)
-
-def get_activated_subseq(activations, test_seq, m):
-    #################################################################
-    # Extract those in the TEST_SEQUENCE that has least one position
-    #     having positive activation.
-    # m: length of filter
-    #################################################################
-    N, L, C = activations.shape
-    activated_subseq = {}
-    for i in range(C): # for each filter
-        activated_subseq[i] = []
-        activation = activations[:, :, i]
-        
-        # candidate and potential_start has a shape (N, )
-        candidate, potential_start = np.max(activation, axis=1), np.argmax(activation, axis=1)
-        
-        # activated_indices should have a shape (K, ), where K = # of positive activations
-        activated_indices = [i for i in range(N) if candidate[i] > 0]
-        K = len(activated_indices)
-        # activated_seq should have a shape(K, n + 2m - 2, 4)
-        activated_seq, ends = test_seq[activated_indices, :, :], potential_start[activated_indices]
-        #starts = ends - m + 1
-        starts = ends + m - 1
-        for k in range(K):
-            start, end = starts[k], ends[k]
-            #activated_subseq[i].append(activated_seq[k, start:(end+1), :])
-            activated_subseq[i].append(activated_seq[k, end:(start+1), :])
-    return activated_subseq
-
-################################################################################
-# Start adding helper functions from 4-13 experiment
-################################################################################
-def get_char_list(activated_subseq):
-    """ Given an activated subsequence of a filter, convert it from from indices to characters
-    """
-    def seq2char(seq):
-        one_hot2int = {0:'A', 1:'C', 2:'G', 3:'T', 4:'N'}
-        int_list = []
-        for s in seq:
-            temp = np.where(s == 1)[0]
-            if temp.size == 0:
-                int_list.append(4)
-            else:
-                int_list.append(temp[0])
-        return [one_hot2int[i] for i in int_list]
-    char_list = []
-    for i, seq in enumerate(activated_subseq):
-        char_list.append(seq2char(seq))
-    return np.array(char_list)  
-
-def get_freqs(char_list):
-    uniques, counts = [], []
-    N, m = char_list.shape
-    for i in range(m):
-        unique, count = np.unique(char_list[:, i], return_counts=True)
-        counts.append(count/N)
-        uniques.append(unique)
-
-    return uniques, counts
-
-def get_candidates(uniques, freqs, threshold):
-    candidates = []
-    assert len(freqs) == len(uniques)
-    for i in range(len(freqs)):
-        unique, freq = uniques[i], freqs[i]
-        sorted_indices = np.argsort(-freq)
-        size, freq_sum = 1, 0
-        while freq_sum < threshold:
-            candi_idx = sorted_indices[:size]
-            freq_sum = freq[candi_idx].sum()
-            size += 1
-        candi = unique[candi_idx]
-        candidates.append(candi)
-    return candidates
-
-def get_motif(candidates):
-    # Find all the words by dynamic programming
-    W = [candidates[0]]
-    for i in range(1, len(candidates)):
-        temp = W[i - 1].copy()
-        W.append([])
-        for char in candidates[i]:
-            for word in temp:
-                W[i].append(word+char)
-    return W[-1]
-############################################################################
-# End of adding helper functions from 4-13 experiment
-############################################################################
+        f = open(os.devnull, 'w')
+    for i in tqdm(range(0, n, n_batch), total=n//n_batch, file=f, ncols=80, leave=False):
+        if n_batches >= max_batches: raise StopIteration
+        if len(datas) == 1:
+            yield datas[0][i:i+n_batch]
+        else:
+            yield (d[i:i+n_batch] for d in datas)
+        n_batches += 1

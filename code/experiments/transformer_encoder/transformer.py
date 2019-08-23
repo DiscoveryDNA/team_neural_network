@@ -251,7 +251,6 @@ class TransformerEncoderLayer(Module):
         return src
 
 
-
 class TransformerDecoderLayer(Module):
     r"""TransformerDecoderLayer is made up of self-attn, multi-head-attn and feedforward network.
     This standard decoder layer is based on the paper "Attention Is All You Need".
